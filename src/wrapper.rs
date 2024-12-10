@@ -85,7 +85,7 @@ impl DbPool {
                 let app_path = exe_path.parent().expect("Executable has no parent directory");
                 create_dir_all(&app_path).expect("Couldn't create app config dir");
 
-                let conn_url = &path_mapper(app_path, conn_url);
+                let conn_url = &path_mapper(app_path.to_path_buf(), conn_url);
 
                 if !Sqlite::database_exists(conn_url).await.unwrap_or(false) {
                     Sqlite::create_database(conn_url).await?;
