@@ -4,7 +4,8 @@
 
 #[cfg(feature = "sqlite")]
 use std::fs::create_dir_all;
-
+use std::env;
+use std::path::Path;
 use indexmap::IndexMap;
 use serde_json::Value as JsonValue;
 #[cfg(any(feature = "sqlite", feature = "mysql", feature = "postgres"))]
@@ -76,11 +77,12 @@ impl DbPool {
         {
             #[cfg(feature = "sqlite")]
             "sqlite" => {
-                let app_path = _app
-                    .path()
-                    .app_config_dir()
-                    .expect("No App config path was found!");
-
+                // let app_path = _app
+                //     .path()
+                //     .app_config_dir()
+                //     .expect("No App config path was found!");
+                let exe_path = env::current_exe().expect("Failed to get current executable path");
+                let app_path = exe_path.parent().expect("Executable has no parent directory");
                 create_dir_all(&app_path).expect("Couldn't create app config dir");
 
                 let conn_url = &path_mapper(app_path, conn_url);
